@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!ELEMENT AdressBook (Contact*)>
+<!ELEMENT Contact (FirstName,SecondName,LastChangeTime,PhoneNumbers,Notes)>
+<!ELEMENT FirstName (#PCDATA)>
+<!ELEMENT SecondName (#PCDATA)>
+<!ELEMENT LastChangeTime (#PCDATA)>
+
+<!ELEMENT PhoneNumbers (PhoneNumber*)>
+<!ELEMENT PhoneNumber (Number,NumberName)>
+<!ELEMENT Number (#PCDATA)>
+<!ELEMENT NumberName (#PCDATA)>
+
+<!ELEMENT Notes (Note*)>
+<!ELEMENT Note (NoteText,NoteTags)>
+<!ELEMENT NoteText (#PCDATA)>
+<!ELEMENT NoteTags (NoteTag*)>
+<!ELEMENT NoteTag (#PCDATA)>

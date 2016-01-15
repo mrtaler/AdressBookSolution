@@ -1,0 +1,90 @@
+﻿<Window x:Class="AdressBookWPF.RepositoryManager"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+        xmlns:res="clr-namespace:AdressBookWPF.Properties"
+        xmlns:libary="clr-namespace:AdressBookLibrary.Model;assembly=AdressBookLibrary"
+        Title="RepositoryManager" Height="400" Width="500">
+    <Window.Resources>
+        <ObjectDataProvider x:Key="typeRepo" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type Type="{x:Type libary:RepositoryType}"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
+            <RowDefinition Height="100*"></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock Text="{x:Static res:Resources.CurrentRepo}" Margin="5,0,0,0" VerticalAlignment="Center"></TextBlock>
+        <ComboBox Width="100" HorizontalAlignment="Left" VerticalAlignment="Center" SelectedValue="{Binding Path=CurrentTypeRepository}" Margin="135,0,0,0">
+            <ComboBox.ItemsSource>
+                <Binding Source="{StaticResource typeRepo}"/>
+            </ComboBox.ItemsSource>
+        </ComboBox>
+
+        <ComboBox Width="100" HorizontalAlignment="Left" VerticalAlignment="Center" SelectedValue="{Binding Path=SelectedCurrentRepository}" Margin="245,0,0,0" DisplayMemberPath="Name">
+            <ComboBox.ItemsSource>
+                <Binding Path="CurrentRepositories"/>
+            </ComboBox.ItemsSource>
+        </ComboBox>
+
+        <RadioButton Margin="350,5,0,0">DTD</RadioButton>
+        <RadioButton Margin="350,20,0,0" IsChecked="{Binding Path=XSD}">XSD</RadioButton>
+
+        <TextBlock Text="{x:Static res:Resources.RepTypeLabel}" Grid.Row="1" Margin="5,0,0,0" VerticalAlignment="Center"></TextBlock>
+        <ComboBox Width="100" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="146,10,0,8" SelectedValue="{Binding Path=EditTypeRepository}">
+            <ComboBox.ItemsSource>
+                <Binding Source="{StaticResource typeRepo}"/>
+            </ComboBox.ItemsSource>
+        </ComboBox>
+
+        <DataGrid Grid.Row="2" Margin="5,5,240,5" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
+                  AlternatingRowBackground="Gainsboro"  AlternationCount="2" GridLinesVisibility="Horizontal" HeadersVisibility="Column"
+                  ItemsSource="{Binding Path=EditRepositories, UpdateSourceTrigger=PropertyChanged}" SelectedValue="{Binding SelectedEditRepository}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Width="100*" Header="{x:Static res:Resources.NameLabel}" Binding="{Binding Path=Name}"></DataGridTextColumn>
+                <DataGridTemplateColumn Width="70">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="{x:Static res:Resources.DelBtn}" Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext.RemoveRepository}"></Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Grid Grid.Row="2" Width="230" HorizontalAlignment="Right" Margin="0,10,5,40" VerticalAlignment="Top" Height="170">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Label Grid.Column="0" Grid.Row="0" Content="{x:Static res:Resources.NameLabel}" VerticalAlignment="Center"/>
+            <Label Grid.Column="0" Grid.Row="1" Content="{x:Static res:Resources.FilePath}" VerticalAlignment="Center"/>
+            <Label Grid.Column="0" Grid.Row="2" Content="XSD" VerticalAlignment="Center"/>
+            <Label Grid.Column="0" Grid.Row="3" Content="DTD" VerticalAlignment="Center"/>
+
+            <TextBox Grid.Column="1" Grid.Row="0" VerticalAlignment="Center"></TextBox>
+            <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Path=FileName}" VerticalAlignment="Top" Height="20" Width="70" Margin="0,0,0,0"/>
+            <Button Grid.Column="1" Grid.Row="1" Content="{x:Static res:Resources.OpenBtn}" VerticalAlignment="Bottom" Height="20" Width="70" HorizontalAlignment="Center" Margin="0,0,0,5" Command="{Binding Path=OpenFilePathDialog}"/>
+            <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding Path=XSDFileName}" VerticalAlignment="Top" Height="20" Width="70" Margin="0,0,0,0"/>
+            <Button Grid.Column="1" Grid.Row="2" Content="{x:Static res:Resources.OpenBtn}" VerticalAlignment="Bottom" Height="20" Width="70" HorizontalAlignment="Center" Margin="0,0,0,5" Command="{Binding Path=OpenXSDPathDialog}"/>
+            <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding Path=DTDFileName}" VerticalAlignment="Top" Height="20" Width="70" Margin="0,0,0,0"/>
+            <Button Grid.Column="1" Grid.Row="3" Content="{x:Static res:Resources.OpenBtn}" VerticalAlignment="Bottom" Height="20" Width="70" HorizontalAlignment="Center" Margin="0,0,0,5" Command="{Binding Path=OpenDTDPathDialog}"/>
+        </Grid>
+        <Button Content="Серилизация" Grid.Row="2" Width="80" Height="24" Margin="0,0,150,10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Command="{Binding Path=Serialise}"></Button>
+        <Button Grid.Row="2" Content="{x:Static res:Resources.AddBtn}" VerticalAlignment="Bottom" Margin="0,0,10,10" Width="80" Height="25" HorizontalAlignment="Right" Command="{Binding Path=AddRepository}"/>
+        <Button x:Name="saveBtn" Grid.Row="3" Content="{x:Static res:Resources.SaveBtn}" Width="85" Height="25" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="20,0" IsCancel="False" IsDefault="True" Command="{Binding Path=SaveChange}">
+        </Button>
+        <Button x:Name="cancelBtn" Grid.Row="3" Content="{x:Static res:Resources.CancelBtn}" Width="85" Height="25"  VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,115,0" IsCancel="True" Command="{Binding Path=CancelChange}">
+        </Button>
+    </Grid>
+</Window>
